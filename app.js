@@ -2,8 +2,8 @@ Ractive.DEBUG = false;
 function index(page){
     var page = parseInt(page) || 1;
     window._G = window._G || {post: {}, postList: {}};
-    // 判断当前路径是否是 /Blog/tags/ 或 /Blog/tags/index.html
-    if (window.location.pathname === '/Blog/tags/' || window.location.pathname === '/Blog/tags/index.html') {
+    // 判断当前路径是否是 /tags/
+    if (window.location.pathname === '/tags/' || window.location.pathname === '/tags/index.html') {
         // 如果是tags页面，获取并显示标签
         $.ajax({
             url: "https://api.github.com/repos/" + _config['owner'] + "/" + _config['repo'] + "/labels",
@@ -77,7 +77,7 @@ function index(page){
                         data: { post: data[i] },
               });
               window._G.post[data[i].number] = {};
-              window._G.post[data[i].number].body = ractive.toHTML().replace(/href="\/post\//g, 'href="/Blog/post/');
+              window._G.post[data[i].number].body = ractive.toHTML();
               
               var title = data[i].title + " | " + _config['blog_name'];
               window._G.post[data[i].number].title = title;
@@ -153,7 +153,7 @@ function search(key){
                            data: {post: data[i]}
                        });
                        window._G.post[data[i].number] = {};
-                       window._G.post[data[i].number].body = ractive.toHTML().replace(/href="\/post\//g, 'href="/Blog/post/');
+                       window._G.post[data[i].number].body = ractive.toHTML();
 
                        var title = data[i].title + " | " + _config['blog_name'];
                        window._G.post[data[i].number].title = title;
@@ -299,7 +299,7 @@ function tagDetail(tagName) {
                     data: { post: data[i] },
                 });
                 window._G.post[data[i].number] = {};
-                window._G.post[data[i].number].body = ractive.toHTML().replace(/href="\/post\//g, 'href="/Blog/post/');
+                window._G.post[data[i].number].body = ractive.toHTML();
 
                 var title = data[i].title + " | " + _config['blog_name'];
                 window._G.post[data[i].number].title = title;
@@ -332,17 +332,17 @@ function updateSidebarCounts() {
 }
 
 var routes = {
-    '/Blog/': index,
-    '/Blog/p:page': index,
-    '/Blog/post/:postId': detail,
-    '/Blog/search/:key': search,
-    '/Blog/tags/': index, // 添加tags路由，指向index函数
-    '/Blog/tags/:tagName': tagDetail, // 新增标签详情路由
-    '/Blog/archives/': index, // archives 页面默认显示列表
-    '/Blog/archives/post/:postId': detail // archives 页面显示 Issue 详情
+    '/': index,
+    'p:page': index,
+    'post/:postId': detail,
+    'search/:key': search,
+    'tags/': index, // 添加tags路由，指向index函数
+    'tags/:tagName': tagDetail, // 新增标签详情路由
+    'archives/': index, // archives 页面默认显示列表
+    'archives/post/:postId': detail // archives 页面显示 Issue 详情
 };
 var router = Router(routes);
-router.init('/Blog/');
+router.init('/');
 
 // Update sidebar counts on application initialization
 updateSidebarCounts();
